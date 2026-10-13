@@ -3,20 +3,20 @@
   const $ = (id) => document.getElementById(id);
   const config = window.MEAL_APP_CONFIG || {mode:"local", demoAdminId:"admin", demoAdminPassword:"meal123"};
   const STORAGE_KEY = "meal-count-records-v1";
+  const THEME_KEY = "meal-count-theme-v1";
   const today = new Date();
   let viewYear = today.getFullYear(), viewMonth = today.getMonth();
   let selectedKey = dateKey(today), isAdmin = false, records = loadRecords(), toastTimer;
-  const THEME_KEY = "meal-count-theme-v1";
 
   function setTheme(theme) {
-    const selected = theme === "dark" ? "dark" : "light";
+    const selected = theme === "light" ? "light" : "dark";
     document.body.dataset.theme = selected;
     $("lightTheme").setAttribute("aria-pressed", String(selected === "light"));
     $("darkTheme").setAttribute("aria-pressed", String(selected === "dark"));
     try { localStorage.setItem(THEME_KEY, selected); } catch {}
   }
-  let savedTheme = "light";
-  try { savedTheme = localStorage.getItem(THEME_KEY) || "light"; } catch {}
+  let savedTheme = "dark";
+  try { savedTheme = localStorage.getItem(THEME_KEY) || "dark"; } catch {}
   setTheme(savedTheme);
 
   function dateKey(date) {
@@ -96,6 +96,37 @@
   }
   function openModal(){ $("loginError").textContent="";$("loginForm").reset();$("loginModal").hidden=false;$("adminId").focus(); }
   function closeModal(){ $("loginModal").hidden=true; }
+  function calculateRange() {
+    const start = $("rangeStart").value;
+    const end = $("rangeEnd").value;
+    if (!start || !end) {
+      $("rangeTotal").textContent = "—";
+      $("rangeDetails").textContent = "Please select both dates.";
+      return;
+    }
+    if (start > end) {
+      $("rangeTotal").textContent = "—";
+      $("rangeDetails").textContent = "The start date must be before the end date.";
+      return;
+    }
+    let total=0, loggedDays=0, totalDays=0;
+    const current=parseKey(start), last=parseKey(end);
+    while(current<=last) {
+      const key=dateKey(current); totalDays++;
+      if(Number.isInteger(records[key])&&records[key]>=0){total+=records[key];loggedDays++;}
+      current.setDate(current.getDate()+1);
+    }
+    $("rangeTotal").textContent=total;
+    $("rangeDetails").textContent=
+      `${formatDate(start,{day:"numeric",month:"short",year:"numeric"})} – ${formatDate(end,{day:"numeric",month:"short",year:"numeric"})} · ${loggedDays} days recorded out of ${totalDays} days`;
+  }
+  const startInput=$("rangeStart"), endInput=$("rangeEnd");
+  startInput.value=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-01`;
+  endInput.value=dateKey(today);
+  $("calculateRange").addEventListener("click",calculateRange);
+  startInput.addEventListener("change",calculateRange);
+  endInput.addEventListener("change",calculateRange);
+
   $("lightTheme").addEventListener("click",()=>setTheme("light"));
   $("darkTheme").addEventListener("click",()=>setTheme("dark"));
   $("prevMonth").addEventListener("click",()=>{viewMonth--;if(viewMonth<0){viewMonth=11;viewYear--;}renderCalendar();});
@@ -116,66 +147,13 @@
     const raw=$("mealInput").value, count=Number(raw);
     if(raw.trim()===""||!Number.isInteger(count)||count<0||count>99){showToast("Enter a whole number from 0 to 99.");return;}
     records[selectedKey]=count;
-    if(saveRecords()){render();showToast("Meal count saved in this browser.");}
+    if(saveRecords()){render();calculateRange();showToast("Meal count saved in this browser.");}
   });
   $("clearMeal").addEventListener("click",()=>{
     if(!isAdmin)return;
     delete records[selectedKey];
-    if(saveRecords()){render();showToast("Count cleared in this browser.");}
+    if(saveRecords()){render();calculateRange();showToast("Count cleared in this browser.");}
   });
-  function calculateRange() {
-    const start = $("rangeStart").value;
-    const end = $("rangeEnd").value;
-
-    if (!start || !end) {
-      $("rangeDetails").textContent = "Please select both dates.";
-      return;
-    }
-
-    if (start > end) {
-      $("rangeTotal").textContent = "—";
-      $("rangeDetails").textContent =
-        "The start date must be before the end date.";
-      return;
-    }
-
-    let total = 0;
-    let loggedDays = 0;
-    let totalDays = 0;
-
-    const current = parseKey(start);
-    const last = parseKey(end);
-
-    while (current <= last) {
-      const key = dateKey(current);
-      totalDays++;
-
-      if (Number.isInteger(records[key]) && records[key] >= 0) {
-        total += records[key];
-        loggedDays++;
-      }
-
-      current.setDate(current.getDate() + 1);
-    }
-
-    $("rangeTotal").textContent = total;
-    $("rangeDetails").textContent =
-      `${formatDate(start, {day:"numeric", month:"short", year:"numeric"})} – ` +
-      `${formatDate(end, {day:"numeric", month:"short", year:"numeric"})} · ` +
-      `${loggedDays} days recorded out of ${totalDays} days`;
-  }
-
-  const startInput = $("rangeStart");
-  const endInput = $("rangeEnd");
-
-  startInput.value =
-    `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-01`;
-  endInput.value = dateKey(today);
-
-  $("calculateRange").addEventListener("click", calculateRange);
-  startInput.addEventListener("change", calculateRange);
-  endInput.addEventListener("change", calculateRange);
-
   calculateRange();
   render();
 })();
