@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f8ff">
+  <title>Meal Count — Daily Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Meal Count home">
+        <span class="brand-mark">M</span>
+        <span><strong>Meal Count</strong><small>Your daily meal log</small></span>
+      </a>
+      <div class="top-actions">
+        <div class="theme-switch" role="group" aria-label="Choose theme">
+          <button id="lightTheme" class="theme-btn" type="button" aria-pressed="true" title="Light theme"><span aria-hidden="true">☀</span><span class="theme-label">Light</span></button>
+          <button id="darkTheme" class="theme-btn" type="button" aria-pressed="false" title="Dark theme"><span aria-hidden="true">☾</span><span class="theme-label">Dark</span></button>
+        </div>
+        <button id="adminOpen" class="btn btn-quiet" type="button"><span aria-hidden="true">♙</span> Admin login</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">YOUR ROUTINE, AT A GLANCE</p>
+          <h1>Keep track.<br><span>Stay consistent.</span></h1>
+          <p class="hero-copy">A simple overview of daily meal counts. No account needed to view the log.</p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="plate"><div class="plate-inner"><span>🍽️</span></div></div>
+          <span class="spark spark-one">✦</span><span class="spark spark-two">✧</span>
+          <span class="art-pill">One day at a time</span>
+        </div>
+      </section>
+
+      <section class="stats-grid" aria-label="Meal statistics">
+        <article class="stat-card"><span class="stat-icon blue">▦</span><div><p>This month</p><strong id="monthTotal">—</strong><small>meals recorded</small></div></article>
+        <article class="stat-card"><span class="stat-icon mint">↗</span><div><p>Daily average</p><strong id="monthAverage">—</strong><small>meals per day</small></div></article>
+        <article class="stat-card"><span class="stat-icon lilac">✓</span><div><p>Days logged</p><strong id="daysLogged">—</strong><small>this month</small></div></article>
+      </section>
+
+      <section class="panel calendar-panel">
+        <div class="section-heading">
+          <div><p class="eyebrow">YOUR HISTORY</p><h2>Daily meal counts</h2><p class="muted">Browse the calendar or pick a date to see its count.</p></div>
+          <div class="month-control"><button id="prevMonth" class="icon-btn" aria-label="Previous month">‹</button><strong id="monthLabel">Month Year</strong><button id="nextMonth" class="icon-btn" aria-label="Next month">›</button></div>
+        </div>
+        <div class="calendar-wrap">
+          <div class="weekdays"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+          <div id="calendar" class="calendar-grid"></div>
+        </div>
+        <div class="legend"><span><i class="dot dot-filled"></i> Count recorded</span><span><i class="dot dot-today"></i> Today</span><span class="muted">Select a day for details</span></div>
+      </section>
+
+      <section class="panel detail-panel">
+        <div class="detail-top">
+          <div><p class="eyebrow">SELECTED DAY</p><h2 id="selectedDate">Today</h2></div>
+          <div class="count-display"><strong id="selectedCount">—</strong><span>meals</span></div>
+        </div>
+        <div id="detailMessage" class="empty-note">Meal counts are visible to everyone. Only the admin can make changes.</div>
+        <div class="admin-edit" id="editArea" hidden>
+          <label for="mealInput">Meal count for this day</label>
+          <div class="edit-row"><input id="mealInput" type="number" min="0" max="99" step="1" inputmode="numeric" placeholder="e.g. 4"><button id="saveMeal" class="btn btn-primary" type="button">Save count</button><button id="clearMeal" class="btn btn-quiet" type="button">Clear</button></div>
+          <p class="helper">Use a whole number from 0 to 99. Save to publish the update.</p>
+        </div>
+      </section>
+
+      <footer><span>Made for simple daily tracking.</span><span id="footerStatus">Public view · Admin edits</span></footer>
+    </main>
+  </div>
+
+  <div id="loginModal" class="modal-backdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+      <button id="closeModal" class="modal-close" aria-label="Close login" type="button">×</button>
+      <div class="login-mark">M</div>
+      <p class="eyebrow">PRIVATE ACCESS</p><h2 id="loginTitle">Admin login</h2>
+      <p class="muted">Sign in to add or edit daily meal counts.</p>
+      <form id="loginForm">
+        <label for="adminId">Admin ID</label><input id="adminId" autocomplete="username" required placeholder="Enter admin ID">
+        <label for="adminPassword">Password</label><input id="adminPassword" type="password" autocomplete="current-password" required placeholder="Enter password">
+        <p id="loginError" class="error" role="alert"></p>
+        <button class="btn btn-primary login-submit" type="submit">Sign in</button>
+      </form>
+      <p class="modal-foot">Viewing the website does not require a login.</p>
+    </section>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
