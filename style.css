@@ -35,3 +35,74 @@ body[data-theme="dark"] .modal-close{background:#263149;color:#d5def1}
 body[data-theme="dark"] .empty-note,body[data-theme="dark"] .admin-edit{border-top-color:#2b3650}
 body[data-theme="dark"] .login-mark{box-shadow:0 7px 18px #00000030}
 @media(max-width:700px){.top-actions{gap:6px}.theme-label{display:none}.theme-btn{padding:8px 10px;font-size:15px}.theme-switch{gap:2px}}
+```css
+/* Custom date range report */
+.range-panel h2 {
+  font: 800 21px Manrope, sans-serif;
+  letter-spacing: -.6px;
+  margin: 0 0 8px;
+}
+
+.range-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+  margin-top: 24px;
+}
+
+.range-inputs label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.range-inputs input {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--ink);
+  color-scheme: light;
+}
+
+body[data-theme="dark"] .range-inputs input {
+  color-scheme: dark;
+}
+
+.range-result {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg);
+}
+
+.range-result span,
+.range-result small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.range-result strong {
+  color: var(--blue);
+  font: 800 38px Manrope, sans-serif;
+  letter-spacing: -1px;
+}
+
+@media (max-width: 600px) {
+  .range-inputs {
+    grid-template-columns: 1fr;
+  }
+
+  .range-inputs .btn {
+    width: 100%;
+  }
+}
+```
