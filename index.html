@@ -44,16 +44,31 @@
       </section>
 
       <section class="panel calendar-panel">
-        <div class="section-heading">
-          <div><p class="eyebrow">YOUR HISTORY</p><h2>Daily meal counts</h2><p class="muted">Browse the calendar or pick a date to see its count.</p></div>
-          <div class="month-control"><button id="prevMonth" class="icon-btn" aria-label="Previous month">‹</button><strong id="monthLabel">Month Year</strong><button id="nextMonth" class="icon-btn" aria-label="Next month">›</button></div>
-        </div>
-        <div class="calendar-wrap">
-          <div class="weekdays"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
-          <div id="calendar" class="calendar-grid"></div>
-        </div>
-        <div class="legend"><span><i class="dot dot-filled"></i> Count recorded</span><span><i class="dot dot-today"></i> Today</span><span class="muted">Select a day for details</span></div>
-      </section>
+       <section class="panel range-panel">
+  <p class="eyebrow">CUSTOM REPORT</p>
+  <h2>Meals between dates</h2>
+  <p class="muted">Choose any period, even across different months.</p>
+
+  <div class="range-inputs">
+    <div>
+      <label for="rangeStart">Start date</label>
+      <input type="date" id="rangeStart">
+    </div>
+    <div>
+      <label for="rangeEnd">End date</label>
+      <input type="date" id="rangeEnd">
+    </div>
+    <button id="calculateRange" class="btn btn-primary" type="button">
+      Calculate
+    </button>
+  </div>
+
+  <div id="rangeResult" class="range-result" aria-live="polite">
+    <span>Total meals in selected period</span>
+    <strong id="rangeTotal">0</strong>
+    <small id="rangeDetails">Choose your dates to see the report.</small>
+  </div>
+</section>
 
       <section class="panel detail-panel">
         <div class="detail-top">
