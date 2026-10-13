@@ -16,7 +16,7 @@
     try { localStorage.setItem(THEME_KEY, selected); } catch {}
   }
   let savedTheme = "light";
-  try { savedTheme = localStorage.getItem(THEME_KEY) || "light"; } catch {}
+  try { savedTheme = localStorage.getItem(THEME_KEY) || "dark"; } catch {}
   setTheme(savedTheme);
 
   function dateKey(date) {
