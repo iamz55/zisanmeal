@@ -123,5 +123,59 @@
     delete records[selectedKey];
     if(saveRecords()){render();showToast("Count cleared in this browser.");}
   });
+  function calculateRange() {
+    const start = $("rangeStart").value;
+    const end = $("rangeEnd").value;
+
+    if (!start || !end) {
+      $("rangeDetails").textContent = "Please select both dates.";
+      return;
+    }
+
+    if (start > end) {
+      $("rangeTotal").textContent = "—";
+      $("rangeDetails").textContent =
+        "The start date must be before the end date.";
+      return;
+    }
+
+    let total = 0;
+    let loggedDays = 0;
+    let totalDays = 0;
+
+    const current = parseKey(start);
+    const last = parseKey(end);
+
+    while (current <= last) {
+      const key = dateKey(current);
+      totalDays++;
+
+      if (Number.isInteger(records[key]) && records[key] >= 0) {
+        total += records[key];
+        loggedDays++;
+      }
+
+      current.setDate(current.getDate() + 1);
+    }
+
+    $("rangeTotal").textContent = total;
+    $("rangeDetails").textContent =
+      `${formatDate(start, {day:"numeric", month:"short", year:"numeric"})} – ` +
+      `${formatDate(end, {day:"numeric", month:"short", year:"numeric"})} · ` +
+      `${loggedDays} days recorded out of ${totalDays} days`;
+  }
+
+  const startInput = $("rangeStart");
+  const endInput = $("rangeEnd");
+
+  startInput.value =
+    `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-01`;
+  endInput.value = dateKey(today);
+
+  $("calculateRange").addEventListener("click", calculateRange);
+  startInput.addEventListener("change", calculateRange);
+  endInput.addEventListener("change", calculateRange);
+
+  calculateRange();
   render();
 })();
